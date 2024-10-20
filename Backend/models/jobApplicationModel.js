@@ -3,9 +3,14 @@ const Schema = mongoose.Schema;
 
 const jobApplicationSchema = new Schema({
   jobId: {
-    type: mongoose.Schema.Types.ObjectId,  // Relates to the Job model
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Job',
     required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,  
+    ref: 'User',
+   
   },
   name: {
     type: String,

@@ -43,10 +43,10 @@ const Signup = () => {
                 },
             });
             console.log('Signup successful:', response.data);
-            // Handle successful signup (e.g., redirect to login page)
+            
         } catch (error) {
             console.error('Signup failed:', error.response.data);
-            // Handle error (e.g., show error message)
+           
         }
     };
 

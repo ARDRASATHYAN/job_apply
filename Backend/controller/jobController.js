@@ -1,13 +1,11 @@
-// jobController.js
-
 import JobApply from '../models/jobApplicationModel.js';
 import Job from '../models/jobModel.js';
 
-// Post Job Controller
+
 export const postJob = async (req, res) => {
   const { title, description, requirements, location, salary, jobType } = req.body;
 
-  // Basic validation
+
   if (!title || !description || !requirements || !location || !salary || !jobType) {
     return res.status(400).json({ error: 'All fields are required.' });
   }
@@ -98,6 +96,7 @@ export const deleteJob = async (req, res) => {
     
     const { name, email, phone, currentLocation, education } = req.body;
     const resume = req.file ? req.file.filename : null;
+    const userId = req.user.id; 
   console.log(req.body);
   
     if (!resume) {
@@ -105,9 +104,10 @@ export const deleteJob = async (req, res) => {
     }
   
     try {
-      // Create a new job application
+    
       const newApplication = new JobApply({
         jobId,
+        userId,
         name,
         email,
         phone,
@@ -117,7 +117,7 @@ export const deleteJob = async (req, res) => {
       });
   console.log(newApplication);
   
-      // Save the application to the database
+     
       const savedApplication = await newApplication.save();
       res.status(200).json({ message: 'Application submitted successfully', application: savedApplication });
     } catch (error) {
@@ -125,3 +125,34 @@ export const deleteJob = async (req, res) => {
       res.status(500).json({ message: 'Error saving application', error });
     }
   };
+
+
+
+ // Function to get applied jobs for a user
+export const getAppliedJobs = async (req, res) => {
+  const userId = req.user.id; 
+console.log(userId);
+
+  try {
+     
+      const appliedJobs = await JobApply.find({ userId }).populate('jobId'); 
+      res.status(200).json(appliedJobs);
+  } catch (error) {
+      console.error('Error fetching applied jobs:', error); 
+      res.status(500).json({ message: 'Error fetching applied jobs', error });
+  }
+};
+  
+// Function to get all job applications
+export const getAllApplications = async (req, res) => {
+  try {
+     
+      const applications = await JobApply.find()
+          .populate('jobId')
+          .populate('userId'); 
+      res.status(200).json(applications);
+  } catch (error) {
+      console.error('Error fetching applications:', error);
+      res.status(500).json({ message: 'Error fetching applications', error });
+  }
+};

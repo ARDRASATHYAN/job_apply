@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const JobApplyForm = ({ jobId }) => {
+const JobApplyForm = () => {
+  const { jobId } = useParams(); 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -10,9 +11,9 @@ const JobApplyForm = ({ jobId }) => {
     currentLocation: '',
     education: '',
   });
-  const [resume, setResume] = useState(null); // For handling file upload
-  const [error, setError] = useState(''); // Error state
-  const [loading, setLoading] = useState(false); // Loading state
+  const [resume, setResume] = useState(null); 
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -35,27 +36,32 @@ const JobApplyForm = ({ jobId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+  
     const formDataObj = new FormData();
     formDataObj.append('name', formData.name);
     formDataObj.append('email', formData.email);
     formDataObj.append('phone', formData.phone);
     formDataObj.append('currentLocation', formData.currentLocation);
     formDataObj.append('education', formData.education);
-    formDataObj.append('resume', resume); // Appending file
-
+    formDataObj.append('resume', resume); 
+    formDataObj.append('jobId', jobId); 
+    const userId = localStorage.getItem('userId'); 
+    formDataObj.append('userId', userId); 
+    const token = localStorage.getItem('authToken'); 
     try {
       const response = await axios.post(`http://localhost:3000/api/jobs/${jobId}/apply`, formDataObj, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,  
         },
       });
       console.log('Application submitted successfully:', response.data);
       navigate('/success');
     } catch (error) {
-      setError('Error submitting application. Please try again.'); // Set error message
+      setError('Error submitting application. Please try again.');
       console.error('Error submitting application:', error);
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 

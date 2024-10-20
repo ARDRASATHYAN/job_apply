@@ -14,6 +14,9 @@ import JobList from './adminmodule/JobList'
 
 import JobPostForm from './adminmodule/Managejob'
 import JobApplyForm from './usermodule/JoppApplication'
+import JobApplySuccessPage from './usermodule/JobApplySuccessPage'
+import AppliedJobs from './usermodule/Appliedjobs'
+import AdminApplications from './adminmodule/AdminApplications'
 
 
 
@@ -33,9 +36,12 @@ function App() {
           <Route path="/admindashboard" element={<Admindashboard />}/>
           <Route path="/managejob" element={<Managejob />}/>
           <Route path="/viewuserapplications" element={<Viewuserapplications />}/>
-
+          <Route path="/success" element={<JobApplySuccessPage />}/>
           <Route path="/viewjob" element={<JobList />}/>
           <Route path="/jobapply/:jobId" element={<JobApplyForm/>}/>
+          <Route path="/applied-jobs" element={<AppliedJobs />} />
+         
+          <Route path="/appliedjobs" element={<AdminApplications/>} />
           </Routes>
 
     </>
